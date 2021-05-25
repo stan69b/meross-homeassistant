@@ -2,9 +2,9 @@ import logging
 from datetime import timedelta
 from typing import Any, Iterable, List
 
-from homeassistant.components.cover import DEVICE_CLASS_SHUTTER, SUPPORT_OPEN, SUPPORT_CLOSE, SUPPORT_STOP
+from homeassistant.components.cover import DEVICE_CLASS_GARAGE, SUPPORT_OPEN, SUPPORT_CLOSE
 from meross_iot.controller.device import BaseDevice
-from meross_iot.controller.mixins.roller_shutter import RollerShutterTimerMixin
+from meross_iot.controller.mixins.garage import GarageOpenerMixin
 from meross_iot.manager import MerossManager
 from meross_iot.model.enums import OnlineStatus, Namespace
 from meross_iot.model.exception import CommandTimeoutError
@@ -25,16 +25,16 @@ PARALLEL_UPDATES = 1
 SCAN_INTERVAL = timedelta(seconds=RELAXED_SCAN_INTERVAL)
 
 
-class MerossRollerShutterWrapper(RollerShutterTimerMixin, BaseDevice):
+class MerossCoverWrapper(GarageOpenerMixin, BaseDevice):
     """
     Type hints helper
     """
     pass
 
 
-class RollerShutterEntityWrapper(CoverEntity):
+class CoverEntityWrapper(CoverEntity):
     """Wrapper class to adapt the Meross bulbs into the Homeassistant platform"""
-    def __init__(self, device: MerossRollerShutterWrapper, channel: int):
+    def __init__(self, device: MerossCoverWrapper, channel: int):
         self._device = device
 
         # If the current device has more than 1 channel, we need to setup the device name and id accordingly
@@ -128,29 +128,23 @@ class RollerShutterEntityWrapper(CoverEntity):
     async def async_open_cover(self, **kwargs):
         await self._device.async_open(channel=self._channel_id)
 
-    async def async_stop_cover(self, **kwargs):
-        await self._device.stop(channel=self._channel_id)
-
     def open_cover(self, **kwargs: Any) -> None:
         self.hass.async_add_executor_job(self.async_open_cover, **kwargs)
 
     def close_cover(self, **kwargs: Any) -> None:
         self.hass.async_add_executor_job(self.async_close_cover, **kwargs)
-
-    def stop_cover(self, **kwargs: Any) -> None:
-        self.hass.async_add_executor_job(self.async_stop_cover, **kwargs)
     # endregion
 
     # region Platform specific properties
     @property
     def device_class(self):
         """Return the class of this device, from component DEVICE_CLASSES."""
-        return DEVICE_CLASS_SHUTTER
+        return DEVICE_CLASS_GARAGE
 
     @property
     def supported_features(self):
         """Flag supported features."""
-        return SUPPORT_OPEN | SUPPORT_CLOSE | SUPPORT_STOP
+        return SUPPORT_OPEN | SUPPORT_CLOSE
 
     @property
     def is_closed(self):
@@ -177,7 +171,7 @@ async def _add_entities(hass, devices: Iterable[BaseDevice], async_add_entities)
     new_entities = []
 
     # Identify all the devices that expose the Light capability
-    devs = filter(lambda d: isinstance(d, RollerShutterTimerMixin), devices)
+    devs = filter(lambda d: isinstance(d, GarageOpenerMixin), devices)
     for d in devs:
         for channel_index, channel in enumerate(d.channels):
             w = CoverEntityWrapper(device=d, channel=channel_index)
