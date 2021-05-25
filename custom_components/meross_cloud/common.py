@@ -16,12 +16,11 @@ MEROSS_MANAGER = "%s.%s" % (PLATFORM, MANAGER)
 SENSORS = 'sensors'
 HA_SWITCH = 'switch'
 HA_LIGHT = 'light'
-HA_SHUTTER = 'shutter'
 HA_SENSOR = 'sensor'
 HA_COVER = 'cover'
 HA_CLIMATE = 'climate'
 HA_FAN = 'fan'
-MEROSS_COMPONENTS = (HA_LIGHT, HA_SWITCH, HA_COVER, HA_SENSOR, HA_CLIMATE, HA_FAN, HA_SHUTTER)
+MEROSS_COMPONENTS = (HA_LIGHT, HA_SWITCH, HA_COVER, HA_SENSOR, HA_CLIMATE, HA_FAN)
 CONNECTION_TIMEOUT_THRESHOLD = 5
 CONF_STORED_CREDS = 'stored_credentials'
 CONF_RATE_LIMIT_PER_SECOND = 'rate_limit_per_second'
@@ -44,10 +43,6 @@ def calculate_cover_id(uuid: str, channel: int):
 
 def calculate_switch_id(uuid: str, channel: int):
     return "%s:%s:%d" % (HA_SWITCH, uuid, channel)
-
-# Todo see if other attributes are needed
-def calculate_shutter_id(uuid: str, channel: int):
-    return "%s:%s:%d" % (HA_SHUTTER, uuid, channel)
 
 
 def calculate_valve_id(uuid: str):

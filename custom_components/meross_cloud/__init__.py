@@ -16,7 +16,7 @@ from meross_iot.model.http.device import HttpDeviceInfo
 from meross_iot.model.http.exception import TokenExpiredException, TooManyTokensException, UnauthorizedException
 
 from .common import (ATTR_CONFIG, CLOUD_HANDLER, PLATFORM, HA_CLIMATE, HA_COVER,
-                     HA_FAN, HA_LIGHT, HA_SENSOR, HA_SWITCH, HA_SHUTTER, MANAGER,
+                     HA_FAN, HA_LIGHT, HA_SENSOR, HA_SWITCH, MANAGER,
                      MEROSS_COMPONENTS, SENSORS, dismiss_notification, notify_error, log_exception, CONF_STORED_CREDS,
                      LIMITER, CONF_RATE_LIMIT_PER_SECOND, CONF_RATE_LIMIT_MAX_TOKENS)
 from .version import MEROSS_CLOUD_VERSION

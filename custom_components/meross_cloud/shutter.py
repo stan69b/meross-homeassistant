@@ -16,7 +16,7 @@ from meross_iot.model.enums import OnlineStatus, Namespace
 from meross_iot.model.exception import CommandTimeoutError
 from meross_iot.model.push.generic import GenericPushNotification
 
-from .common import (PLATFORM, MANAGER, calculate_shutter_id, log_exception, SENSOR_POLL_INTERVAL_SECONDS)
+from .common import (PLATFORM, MANAGER, calculate_switch_id, log_exception, SENSOR_POLL_INTERVAL_SECONDS)
 
 # Conditional import for switch device
 try:
